@@ -9,7 +9,7 @@ import {
   RefreshControl,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { API_URL } from "../../constants/api";
+import api from "../../lib/api";
 import { useAuthStore } from "../../store/authStore";
 import styles from "../../assets/styles/profile.styles";
 import ProfileHeader from "../../components/ProfileHeader";
@@ -34,13 +34,7 @@ export default function Profile() {
     try {
       setIsLoading(true);
 
-      const response = await fetch(`${API_URL}/books/user`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Failed to fetch user books");
-
+      const { data } = await api.get('/books/user');
       setBooks(data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -58,13 +52,7 @@ export default function Profile() {
     try {
       setDeleteBookId(bookId);
 
-      const response = await fetch(`${API_URL}/books/${bookId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Failed to delete book");
+      await api.delete(`/books/${bookId}`);
 
       setBooks(books.filter((book) => book._id !== bookId));
       Alert.alert("Success", "Recommendation deleted successfully");

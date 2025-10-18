@@ -28,8 +28,5 @@
         <data android:scheme="myapp"/>
       </intent-filter>
     </activity>
-    <windowsSettings xmlns:ws2="http://schemas.microsoft.com/SMI/2016/WindowsSettings">
-        <ws2:longPathAware>true</ws2:longPathAware>
-    </windowsSettings>
   </application>
 </manifest>

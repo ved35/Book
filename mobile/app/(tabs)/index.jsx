@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  TouchableOpacity,
   FlatList,
   ActivityIndicator,
   RefreshControl,
@@ -12,11 +11,11 @@ import { Image } from "expo-image";
 import { useEffect, useState } from "react";
 
 import styles from "../../assets/styles/home.styles";
-import { API_URL } from "../../constants/api";
 import { Ionicons } from "@expo/vector-icons";
 import { formatPublishDate } from "../../lib/utils";
 import COLORS from "../../constants/colors";
 import Loader from "../../components/Loader";
+import api from "../../lib/api";
 
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -33,12 +32,7 @@ export default function Home() {
       if (refresh) setRefreshing(true);
       else if (pageNum === 1) setLoading(true);
 
-      const response = await fetch(`${API_URL}/books?page=${pageNum}&limit=2`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Failed to fetch books");
+      const { data } = await api.get(`/books?page=${pageNum}&limit=2`);
 
       // todo fix it later
       // setBooks((prevBooks) => [...prevBooks, ...data.books]);
